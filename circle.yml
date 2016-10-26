@@ -1,8 +1,8 @@
 machine: 
   environment:
     SBT_VERSION: 0.13.12
-    SBT_OPTS: "-Xms512M -Xmx2048M -Xss1M -XX:+CMSClassUnloadingEnabled"
-    _JAVA_OPTIONS: "-Xms512m -Xmx2048m -Xss1M -XX:+CMSClassUnloadingEnabled"
+    SBT_OPTS: "-Xms512M -Xmx2048M -XX:+CMSClassUnloadingEnabled"
+    _JAVA_OPTIONS: "-Xms512m -Xmx2048m -Xss2M"
   java:
     version: oraclejdk8
 
