@@ -1,4 +1,4 @@
-machine:
+machine: 
   environment:
     SBT_VERSION: 0.13.12
     SBT_OPTS: "-Xms512M -Xmx2048M -Xss1M -XX:+CMSClassUnloadingEnabled"
