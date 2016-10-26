@@ -117,6 +117,9 @@ baseVersion in Global := "2.11.9"
 baseVersionSuffix in Global := "SNAPSHOT"
 mimaReferenceVersion in Global := Some("2.11.0")
 
+coverageScalacRuntimeModule in Global := Some("org.scoverage" % "scalac-scoverage-runtime" % "2.0.0-SNAPSHOT")
+coverageCleanSubprojectFiles in Global := false
+
 lazy val commonSettings = clearSourceAndResourceDirectories ++ publishSettings ++ Seq[Setting[_]](
   organization := "org.scala-lang",
   // we don't cross build Scala itself
