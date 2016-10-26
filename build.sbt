@@ -599,7 +599,7 @@ lazy val junit = project.in(file("test") / "junit")
   .settings(disableDocs: _*)
   .settings(disablePublishing: _*)
   .settings(
-    javaOptions in Test += "-Xss1m", // to prevent from StackOverflowError in scala.collection.immutable.PagedSeqTest.test_SI6615 test
+    javaOptions in Test += "-Xss2m", // to prevent from StackOverflowError in scala.collection.immutable.PagedSeqTest.test_SI6615 test
     fork in Test := true,
     libraryDependencies ++= Seq(junitDep, junitInterfaceDep),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-v"),
