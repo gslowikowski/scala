@@ -22,6 +22,9 @@ dependencies:
 
 test:
   override: 
-    - sbt -sbt-version $SBT_VERSION coverage test
+    - sbt -sbt-version $SBT_VERSION coverage junit/test
     - sbt -sbt-version $SBT_VERSION coverageReport
     - sbt -sbt-version $SBT_VERSION coverageAggregate
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex "target/junit/test-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
