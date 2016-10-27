@@ -22,8 +22,17 @@ dependencies:
 
 test:
   override: 
+    - sbt -sbt-version $SBT_VERSION coverage "partest --res"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --scalap"
     - sbt -sbt-version $SBT_VERSION coverage "partest --specialized"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --scalacheck"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --instrumented"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --presentation"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --jvm"
     - sbt -sbt-version $SBT_VERSION coverage junit/test
+    - sbt -sbt-version $SBT_VERSION coverage "partest --neg"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --pos"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --run"
     - sbt -sbt-version $SBT_VERSION coverageReport
     - sbt -sbt-version $SBT_VERSION coverageAggregate
   post:
@@ -76,5 +85,5 @@ test:
     - mv target/scala-2.10/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/scoverage.xml
     - mkdir -p $CIRCLE_TEST_REPORTS/junit
     - find . -type f -regex "target/junit/test-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-    - mkdir -p $CIRCLE_TEST_REPORTS/partest/specialized
-    - find . -type f -regex "target/test/test-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/partest/specialized/ \;
+    - mkdir -p $CIRCLE_TEST_REPORTS/partest
+    - find . -type f -regex "target/test/test-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/partest/ \;
