@@ -24,7 +24,7 @@ test:
   override: 
     - sbt -sbt-version $SBT_VERSION coverage "partest --res"
     - sbt -sbt-version $SBT_VERSION coverage "partest --scalap"
-    - sbt -sbt-version $SBT_VERSION coverage "partest --specialized"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --specialized"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --scalacheck"
     - sbt -sbt-version $SBT_VERSION coverage "partest --instrumented"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --presentation"
