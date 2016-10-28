@@ -22,17 +22,17 @@ dependencies:
 
 test:
   override: 
-    - sbt -sbt-version $SBT_VERSION coverage "partest --res"
-    - sbt -sbt-version $SBT_VERSION coverage "partest --scalap"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --res"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --scalap"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --specialized"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --scalacheck"
-    - sbt -sbt-version $SBT_VERSION coverage "partest --instrumented"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --instrumented"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --presentation"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --jvm"
     - sbt -sbt-version $SBT_VERSION coverage junit/test
-    - sbt -sbt-version $SBT_VERSION coverage "partest --neg"
-    - sbt -sbt-version $SBT_VERSION coverage "partest --pos"
-    - sbt -sbt-version $SBT_VERSION coverage "partest --run"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --neg"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --pos"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --run"
     - sbt -sbt-version $SBT_VERSION coverageReport
     - sbt -sbt-version $SBT_VERSION coverageAggregate
   post:
