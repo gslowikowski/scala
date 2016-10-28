@@ -24,7 +24,30 @@ test:
   override: 
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --res"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --scalap"
-    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --specialized"
+#    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --specialized"
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/arrays.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/arrays-traits.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/constant_lambda.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/fft.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/SI-7343.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/SI-7344.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-absfun.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-ame.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-constr.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-early.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-hlists.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-init.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-matrix-new.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-matrix-old.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-overrides.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-patmatch.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-super.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/spec-t3896.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/t6035
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/tb3651.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/tc3651.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/td3651.scala
+    - sbt -sbt-version $SBT_VERSION coverage "partest --verbose test/files/specialized/test.scala
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --scalacheck"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --instrumented"
     - sbt -sbt-version $SBT_VERSION coverage "partest --verbose --presentation"
