@@ -90,6 +90,11 @@ baseVersion in Global := "2.12.0"
 baseVersionSuffix in Global := "SNAPSHOT"
 mimaReferenceVersion in Global := Some("2.12.0-RC1")
 
+coverageScalacRuntimeModule in Global := Some("org.scoverage" % "scalac-scoverage-runtime" % "2.0.0-SNAPSHOT")
+coverageCleanSubprojectFiles in Global := false
+coverageOutputTeamCity in Global := true // to zip scoverage HTML report
+//?concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)
+
 lazy val commonSettings = clearSourceAndResourceDirectories ++ publishSettings ++ Seq[Setting[_]](
   organization := "org.scala-lang",
   // we don't cross build Scala itself
@@ -343,6 +348,9 @@ lazy val library = configureAsSubproject(project)
                                            regexFileFilter(".*/runtime/ScalaRunTime\\.scala") ||
                                            regexFileFilter(".*/runtime/StringAdd\\.scala"))): _*)
   .settings(MiMa.settings: _*)
+  .settings(
+    coverageExcludedPackages := "scala\\.io\\.AnsiColor"
+  )
 
 lazy val reflect = configureAsSubproject(project)
   .settings(generatePropertiesFileSettings: _*)
@@ -365,6 +373,17 @@ lazy val reflect = configureAsSubproject(project)
     )
   )
   .settings(MiMa.settings: _*)
+  .settings(
+    coverageExcludedPackages := Seq(
+      "scala\\.reflect\\.internal\\.Chars",
+      "scala\\.reflect\\.internal\\.tpe\\.GlbLubs",
+      "scala\\.reflect\\.internal\\.tpe\\.TypeComparers",
+      "scala\\.reflect\\.internal\\.tpe\\.TypeToStrings",
+      "scala\\.reflect\\.internal\\.Names",
+      "scala\\.reflect\\.internal\\.Constants",
+      "scala\\.reflect\\.internal\\.Scopes"
+    ).mkString(";")
+  )
   .dependsOn(library)
 
 lazy val compiler = configureAsSubproject(project)
@@ -424,6 +443,14 @@ lazy val compiler = configureAsSubproject(project)
     ("org.apache.ant", "ant"),
     ("org.scala-lang.modules", "scala-asm")
   ): _*)
+  .settings(
+    coverageExcludedPackages := Seq(
+      "scala\\.tools\\.nsc\\.typechecker\\.Implicits",
+      "scala\\.tools\\.nsc\\.typechecker\\.Typers",
+      "scala\\.tools\\.nsc\\.backend\\.jvm\\.AsmUtils",
+      "scala\\.tools\\.nsc\\.plugins\\.PluginComponent"
+    ).mkString(";")
+  )
   .dependsOn(library, reflect)
 
 lazy val interactive = configureAsSubproject(project)
@@ -432,6 +459,13 @@ lazy val interactive = configureAsSubproject(project)
   .settings(
     name := "scala-compiler-interactive",
     description := "Scala Interactive Compiler"
+  )
+  .settings(
+    coverageExcludedPackages := Seq(
+      "scala\\.tools\\.nsc\\.interactive\\.RichCompilationUnits",
+      "scala\\.tools\\.nsc\\.interactive\\.tests\\.InteractiveTestSettings",
+      "scala\\.tools\\.nsc\\.interactive\\.tests\\.core\\.TestSettings"
+    ).mkString(";")
   )
   .dependsOn(compiler)
 
@@ -450,6 +484,9 @@ lazy val replJline = configureAsSubproject(Project("repl-jline", file(".") / "sr
   .settings(
     libraryDependencies += jlineDep,
     name := "scala-repl-jline"
+  )
+  .settings(
+    coverageEnabled := false
   )
   .dependsOn(repl)
 
@@ -500,6 +537,9 @@ lazy val scaladoc = configureAsSubproject(project)
     libraryDependencies ++= Seq(scalaXmlDep, partestDep),
     includeFilter in unmanagedResources in Compile := "*.html" | "*.css" | "*.gif" | "*.png" | "*.js" | "*.txt" | "*.svg" | "*.eot" | "*.woff" | "*.ttf"
   )
+  .settings(
+    coverageEnabled := false
+  )
   .dependsOn(compiler)
 
 lazy val scalap = configureAsSubproject(project)
@@ -512,6 +552,9 @@ lazy val scalap = configureAsSubproject(project)
       "/project/description" -> <description>bytecode analysis tool</description>,
       "/project/properties" -> scala.xml.Text("")
     )
+  )
+  .settings(
+    coverageEnabled := false
   )
   .dependsOn(compiler)
 
@@ -536,12 +579,15 @@ lazy val junit = project.in(file("test") / "junit")
   .settings(disableDocs: _*)
   .settings(disablePublishing: _*)
   .settings(
+    javaOptions in Test += "-Xss2m", // to prevent from StackOverflowError in scala.collection.immutable.PagedSeqTest.test_SI6615 test
     fork in Test := true,
-    javaOptions in Test += "-Xss1M",
     libraryDependencies ++= Seq(junitDep, junitInterfaceDep, jolDep),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-v"),
     testFrameworks -= new TestFramework("org.scalacheck.ScalaCheckFramework"),
     unmanagedSourceDirectories in Test := List(baseDirectory.value)
+  )
+  .settings(
+    coverageEnabled := false
   )
 
 lazy val osgiTestFelix = osgiTestProject(
@@ -639,6 +685,7 @@ lazy val test = project
     testFrameworks -= new TestFramework("org.scalacheck.ScalaCheckFramework"),
     testOptions in IntegrationTest += Tests.Argument("-Dpartest.java_opts=-Xmx1024M -Xms64M"),
     testOptions in IntegrationTest += Tests.Argument("-Dpartest.scalac_opts=" + (scalacOptions in Compile).value.mkString(" ")),
+    testOptions in IntegrationTest += Tests.Argument("-Dpartest.debug=true"),
     testOptions in IntegrationTest += Tests.Setup { () =>
       val cp = (dependencyClasspath in Test).value
       val baseDir = (baseDirectory in ThisBuild).value

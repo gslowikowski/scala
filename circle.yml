@@ -1,0 +1,76 @@
+machine:
+  environment:
+    SBT_VERSION: 0.13.12
+    SBT_OPTS: "-Xms512M -Xmx2048M -XX:+CMSClassUnloadingEnabled"
+    _JAVA_OPTIONS: "-Xms512m -Xmx2048m -Xss2M"
+  java:
+    version: oraclejdk8
+
+dependencies:
+  cache_directories:
+    - "~/.ivy2/cache"
+    - "~/.sbt/boot"
+  pre:
+    - find ~/.sbt -name "*.lock" | xargs -r rm
+    - find ~/.ivy2 -name "ivydata-*.properties" | xargs -r rm
+    - scripts/publishLocalScoverageJava.sh
+    - scripts/publishLocalScoverage.sh
+    - scripts/publishLocalSbtScoverage.sh 
+  override:
+    - java -XX:+PrintFlagsFinal -version
+    - sbt -sbt-version $SBT_VERSION coverage test:compile
+
+test:
+  override: 
+    - sbt -sbt-version $SBT_VERSION coverage junit/test
+#    - sbt -sbt-version $SBT_VERSION coverage partest
+    - sbt -sbt-version $SBT_VERSION coverageReport
+    - sbt -sbt-version $SBT_VERSION coverageAggregate
+  post:
+    - mkdir -p $CIRCLE_ARTIFACTS/compiler
+    - mkdir -p $CIRCLE_ARTIFACTS/interactive
+    - mkdir -p $CIRCLE_ARTIFACTS/junit
+    - mkdir -p $CIRCLE_ARTIFACTS/library
+    - mkdir -p $CIRCLE_ARTIFACTS/partest-extras
+    - mkdir -p $CIRCLE_ARTIFACTS/reflect
+    - mkdir -p $CIRCLE_ARTIFACTS/repl
+    - mkdir -p $CIRCLE_ARTIFACTS/repl-jline
+    - mkdir -p $CIRCLE_ARTIFACTS/scaladoc
+    - mkdir -p $CIRCLE_ARTIFACTS/scalap
+    - mv target/compiler/coverage.zip $CIRCLE_ARTIFACTS/compiler/coverage.zip
+    - mv target/compiler/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/compiler/cobertura.xml
+    - mv target/compiler/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/compiler/scoverage.xml
+    - mv target/interactive/coverage.zip $CIRCLE_ARTIFACTS/interactive/coverage.zip
+    - mv target/interactive/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/interactive/cobertura.xml
+    - mv target/interactive/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/interactive/scoverage.xml
+    - mv target/junit/coverage.zip $CIRCLE_ARTIFACTS/junit/coverage.zip
+    - mv target/junit/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/junit/cobertura.xml
+    - mv target/junit/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/junit/scoverage.xml
+    - mv target/library/coverage.zip $CIRCLE_ARTIFACTS/library/coverage.zip
+    - mv target/library/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/library/cobertura.xml
+    - mv target/library/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/library/scoverage.xml
+    - mv target/partest-extras/coverage.zip $CIRCLE_ARTIFACTS/partest-extras/coverage.zip
+    - mv target/partest-extras/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/partest-extras/cobertura.xml
+    - mv target/partest-extras/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/partest-extras/scoverage.xml
+    - mv target/reflect/coverage.zip $CIRCLE_ARTIFACTS/reflect/coverage.zip
+    - mv target/reflect/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/reflect/cobertura.xml
+    - mv target/reflect/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/reflect/scoverage.xml
+    - mv target/repl/coverage.zip $CIRCLE_ARTIFACTS/repl/coverage.zip
+    - mv target/repl/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/repl/cobertura.xml
+    - mv target/repl/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/repl/scoverage.xml
+    - mv target/repl-jline/coverage.zip $CIRCLE_ARTIFACTS/repl-jline/coverage.zip
+    - mv target/repl-jline/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/repl-jline/cobertura.xml
+    - mv target/repl-jline/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/repl-jline/scoverage.xml
+    - mv target/scaladoc/coverage.zip $CIRCLE_ARTIFACTS/scaladoc/coverage.zip
+    - mv target/scaladoc/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/scaladoc/cobertura.xml
+    - mv target/scaladoc/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/scaladoc/scoverage.xml
+    - mv target/scalap/coverage.zip $CIRCLE_ARTIFACTS/scalap/coverage.zip
+    - mv target/scalap/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/scalap/cobertura.xml
+    - mv target/scalap/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/scalap/scoverage.xml
+    - mv target/scala-2.10/coverage.zip $CIRCLE_ARTIFACTS/coverage.zip
+    - mv target/scala-2.10/coverage-report/cobertura.xml $CIRCLE_ARTIFACTS/cobertura.xml
+    - mv target/scala-2.10/scoverage-report/scoverage.xml $CIRCLE_ARTIFACTS/scoverage.xml
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit
+    - find . -type f -regex "target/junit/test-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+#    - mkdir -p $CIRCLE_TEST_REPORTS/partest
+#    - find . -type f -regex "target/test/test-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/partest/ \;
