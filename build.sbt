@@ -93,7 +93,7 @@ mimaReferenceVersion in Global := Some("2.12.0-RC1")
 coverageScalacRuntimeModule in Global := Some("org.scoverage" % "scalac-scoverage-runtime" % "2.0.0-SNAPSHOT")
 coverageCleanSubprojectFiles in Global := false
 coverageOutputTeamCity in Global := true // to zip scoverage HTML report
-//?concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)
+concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)
 
 lazy val commonSettings = clearSourceAndResourceDirectories ++ publishSettings ++ Seq[Setting[_]](
   organization := "org.scala-lang",
